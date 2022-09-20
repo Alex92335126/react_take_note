@@ -35,7 +35,7 @@ export default function TodoList(props) {
         <>
             <div className="d-flex justify-content-center">
                 <div className="col-md-5">
-                    <h3>Content</h3>
+                    <h3>Note</h3>
                 </div>
                 <div className="col-md-5">
                     <h3>Remove Note</h3>
@@ -49,7 +49,7 @@ export default function TodoList(props) {
                             {item.content} 
                         </div>
                         <div className="col-md-5">
-                            <Button variant="success" className="del_button" onClick={() => dispatch(deleteTodoThunk(item.id))}>
+                            <Button variant="danger" className="del_button" onClick={() => dispatch(deleteTodoThunk(item.id))}>
                                 Delete
                             </Button>
                         </div>
