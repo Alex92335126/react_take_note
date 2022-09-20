@@ -1,3 +1,6 @@
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+
 class AuthRouter {
     constructor(authService, express) {
         this.authService = authService
@@ -13,13 +16,15 @@ class AuthRouter {
         return router;
     }
 
-    login(req, res) {
+    async login(req, res) {
         const { username, password } = req.body;
-        
-        let user = this.authService.getUser(username)
+
+        let user = await this.authService.getUser(username)
+        console.log('login user ===>', user)
 
         if (user) {
             let result = await bcrypt.compare(password, user.password);
+            console.log(result)
 
             if (result) {
                 const payload = {
@@ -35,7 +40,7 @@ class AuthRouter {
 
     }
 
-    signup(req, res) {
+    async signup(req, res) {
         const { username, password } = req.body;
         console.log(username, password);
         let query = await this.authService.getUser(username)
@@ -56,3 +61,5 @@ class AuthRouter {
         // current user data?
     }
 }
+
+module.exports = AuthRouter

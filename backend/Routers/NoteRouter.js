@@ -1,3 +1,5 @@
+
+
 /**********************************************
  * Routing for the NoteApplication
  * ==================================
@@ -16,7 +18,7 @@ class NoteRouter {
     router.get("/", this.get.bind(this));
     router.post("/", this.post.bind(this));
     router.put("/:id", this.put.bind(this));
-    router.delete("/:id", this.delete.bind(this));
+    router.delete("/:id", this.delete);
     return router;
   }
 
@@ -26,7 +28,9 @@ class NoteRouter {
   //   when the route is "/"
   //   Here we handle what will occur when we have been sent down a particular path, this path is '/' - we will just list all of the notes, that match our(req.auth.user)
   get(req, res) {
-    let user = req.auth.user;
+    console.log('hi get data')
+    let user = req.user;
+    console.log(req.user)
     console.log("auth user", user); 
     return (
       this.noteService
@@ -53,26 +57,32 @@ class NoteRouter {
   /** # Post Method   #
 /*  ====================== */
   // 2) Create a post method
-  post(req, res) {
-    console.log('HI post note router')
-    let user = req.auth.user;
-    return (
-      this.noteService
-        .add(req.body.note, user)
-        // call the add method here and pass note and user
-        .then(() => {
-          // list the notes of the user
-          return this.noteService.list(user);
-        })
-        .then((notes) => {
-          // make the notes into json format
-          res.json(notes);
-        })
-        .catch((err) => {
-          // Catch error
-          res.status(500).json(err);
-        })
-    );
+  async post(req, res) {
+    console.log('HI post note router', req.body)
+    let user = req.user;
+    try {
+      const add = await this.noteService.add(req.body.content, user)
+      res.json(add)
+    } catch (error) {
+      res.status(500).json(error)
+    }
+    // return (
+    //   this.noteService
+    //     .add(req.body.content, user)
+    //     // call the add method here and pass note and user
+    //     .then(() => {
+    //       // list the notes of the user
+    //       return this.noteService.list(user);
+    //     })
+    //     .then((notes) => {
+    //       // make the notes into json format
+    //       res.json(notes);
+    //     })
+    //     .catch((err) => {
+    //       // Catch error
+    //       res.status(500).json(err);
+    //     })
+    // );
   }
 
   /** # PUT Method   #
@@ -108,28 +118,42 @@ class NoteRouter {
   /*  ====================== */
   // 4) Create a delete method
 
-  delete(req, res) {
+  delete = async (req, res) => {
     let id = req.params.id;
-    let user = req.auth.user;
-    return (
-      this.noteService
-        .remove(id, user)
-
-        // first remove the note. Pass id and user as argument
-        .then(() => {
-          // list the notes of the user
-          return this.noteService.list(user);
-        })
-        .then((notes) => {
-          // make the notes into json format
-          res.json(notes);
-        })
-        .catch((err) => {
-          // Catch error
-          res.status(500).json(err);
-        })
-    );
+    // let user = req.user;
+    try {
+      const deletedId = await this.noteService.remove(id)
+      if(deletedId) {
+        res.json(id)
+      } else {
+        res.status(500).json("something wrong")
+      }
+    } catch (error) {
+      res.status(500).json(error)
+    }
   }
+  // async delete(req, res) {
+  //   let id = req.params.id;
+  //   let user = req.user;
+  //   return (
+  //     this.noteService
+  //       .remove(id, user)
+
+  //       // first remove the note. Pass id and user as argument
+  //       .then(() => {
+  //         // list the notes of the user
+  //         return this.noteService.list(user);
+  //       })
+  //       .then((notes) => {
+  //         // make the notes into json format
+  //         res.json(notes);
+  //       })
+  //       .catch((err) => {
+  //         // Catch error
+  //         res.status(500).json(err);
+  //       })
+  //   );
+  // }
 }
 
 module.exports = NoteRouter;

@@ -6,25 +6,23 @@ class NoteService {
   async list(user) {
     console.log("listUser", user);
      
-    const notes = await this.knex("users")
-      .select("notes.content", "notes.id")
-      .join("notes", "users.id", "notes.user_id")
-      .where("username", user);
+    // const notes = await this.knex("users")
+    //   .select("notes.content", "notes.id")
+    //   .join("notes", "users.id", "notes.user_id")
+    //   .where("id", user);
     
+    const notes = await this.knex("notes").select("id","content").where("user_id", user)
     console.log('note service note', notes)
     return notes
   }
 
-  add(note, user) {
+  async add(note, user) {
     console.log("add notes", note, user)
-    return this.knex("users")
-      .select("id")
-      .where("username", user)
-      .first()
-      .then((data) => {
-        //{id: 1}
-        return this.knex("notes").insert({ user_id: data.id, content: note });
-      });
+    const addnote = await this.knex("notes")
+      .insert({ user_id: user, content: note })
+      .returning("id", "content")
+    return addnote;
+      
   }
 
   update(id, note) {

@@ -2,12 +2,15 @@ import { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import axios from "axios"
+import { useDispatch } from 'react-redux';
+import { addTodoThunk } from '../redux/todoSlice';
 
 export default function MyVerticallyCenteredModal(props) {
     // console.log("property", props); 
+    const dispatch = useDispatch()
     const [linkInfo, setLinkInfo] = useState({
-        title: '',
-        favLink: ''
+        content: '',
+        // favLink: ''
     })
 
     const handleChange = (e) => {
@@ -19,17 +22,9 @@ export default function MyVerticallyCenteredModal(props) {
     }
 
     const handleClick = async() => {
-      console.log("linkInfo", linkInfo)
-      let res = await axios.post("http://localhost:8888/", {
-        title: linkInfo.title,
-        URL_link: linkInfo.favLink
-      })
-      if (res) {
-        console.log("success")
-        props.onHide()
-        props.reload()
-      }
-      setLinkInfo({title: "", favLink: ""})
+      console.log("content", linkInfo.content)
+      await dispatch(addTodoThunk(linkInfo))
+      props.onHide()
     } 
 
     return (
@@ -41,28 +36,28 @@ export default function MyVerticallyCenteredModal(props) {
     >
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
-          Add Link
+          Add Note
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <h4>Enter the Note</h4>
+        <h4>Enter Note</h4>
         <form>
-            <label>Title</label>
+            <label>Add Note</label>
             <input
                 type='text'
-                name="title"
+                name="content"
                 value={linkInfo.title}
-                placeholder="Input Link Title"
+                placeholder="Add Notes"
                 onChange={(e) => handleChange(e)}
             />
-            <label>Take Note</label>
+            {/* <label>Take Note</label>
             <input
                 type='text'
                 name="favLink"
                 value={linkInfo.favLink}
                 placeholder="Input the link to save"
                 onChange={(e) => handleChange(e)}
-            />
+            /> */}
         </form>
       </Modal.Body>
       <Modal.Footer>

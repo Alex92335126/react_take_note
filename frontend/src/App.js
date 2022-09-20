@@ -24,7 +24,7 @@ function App() {
    }
 
    useEffect(() => {
-     getData()
+    //  getData()
    }, [])
 
    const keywordChanged = (e) => {
@@ -54,7 +54,7 @@ function App() {
        <Modal
          show={showModal}
          onHide={() => setShowModal(false)}
-         reload={() => addedNewLink()}
+        //  reload={() => addedNewLink()}
        />
        <div className='profile-card'>    
          {/* profile image */}
@@ -63,11 +63,11 @@ function App() {
        </div>
        <div>
          <Button variant="warning" size="lg" onClick={() => setShowModal(true)}>
-             Add Link
+             Add Note
          </Button>
        </div>
        <div className='search_link'> 
-         <h2 className='mx-2'>Search Link</h2>  
+         <h2 className='mx-2'>Search Note</h2>  
          <SearchBar keyword={searchText} keywordChanged={keywordChanged}  />
        </div>  
        <div>

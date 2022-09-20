@@ -3,12 +3,14 @@ class AuthService {
         this.knex = knex;
     }
     
-    async getUser(user) {
-        let user = await knex("users").where({ username }).first();
+    async getUser(username) {
+        let user = await this.knex("users").where({ username }).first();
         return user;
     }
 
     async addUser(username, password) {
-        return await knex("users").insert({ username, password });
+        return await this.knex("users").insert({ username, password });
     }
 }
+
+module.exports = AuthService
